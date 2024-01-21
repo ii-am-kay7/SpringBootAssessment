@@ -1,4 +1,4 @@
-package com.enviro.assessment.grad001.kamielahheuvel.springbootassessment;
+package com.enviro.assessment.grad001.kamielahheuvel;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
