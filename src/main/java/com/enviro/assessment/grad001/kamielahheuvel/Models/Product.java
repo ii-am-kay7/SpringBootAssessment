@@ -14,6 +14,11 @@ public class Product {
     private String name;
     private BigDecimal currentBalance;
 
+    // Adding relationship to Investor
+    @ManyToOne
+    @JoinColumn(name = "investor_id")
+    private Investor investor;
+
     // Default constructor required by JPA
     public Product(){}
 
