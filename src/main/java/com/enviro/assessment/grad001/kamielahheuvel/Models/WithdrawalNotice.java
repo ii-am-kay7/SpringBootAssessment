@@ -62,7 +62,8 @@ public class WithdrawalNotice {
     // Returns a string presentation of the WithdrawalNotice
     @Override
     public String toString(){
-        return "WithdrawalNotice[Id: " + id  + ", WithdrawalAmount: " + withdrawalAmount  + "]";
+        return "WithdrawalNotice[Id: " + id  + ", WithdrawalAmount: " +
+        withdrawalAmount  + ", Date: " + date + ", BankingDetails: " + bankingDetails + "]";
     }
 
 }
