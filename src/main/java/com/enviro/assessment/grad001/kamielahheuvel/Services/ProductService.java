@@ -1,6 +1,9 @@
 package com.enviro.assessment.grad001.kamielahheuvel.Services;
 
-public interface ProductService {
+import org.springframework.stereotype.Service;
+
+@Service
+public class ProductService {
 
     
 }

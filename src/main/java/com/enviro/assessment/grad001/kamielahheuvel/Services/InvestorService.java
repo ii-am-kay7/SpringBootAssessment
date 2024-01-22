@@ -1,6 +1,6 @@
 package com.enviro.assessment.grad001.kamielahheuvel.Services;
 
-import java.util.List;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,14 +25,56 @@ public class InvestorService {
         
     }
 
-    public Investor getInvestorWithProductsByName(String name) throws Exception{
-        Investor investor = investorRepository.findByName(name);
-        if (investor != null) {
+    public Investor getInvestorById(Long Id) throws Exception{
+        Optional<Investor> OptionalInvestor = investorRepository.findById(Id);
+        if (OptionalInvestor != null) {
+            return OptionalInvestor.get();
+        }else{
+            throw new Exception("Investor with id " + Id + " not found");
+        }
+        
+    }
+
+    public Investor getInvestorWithProductsById(Long Id) throws Exception{
+        Optional<Investor> optionalInvestor = investorRepository.findById(Id);
+        if (optionalInvestor != null) {
+            Investor investor = optionalInvestor.get();
             List<Product> productList = investor.getInvestments();
             return combineInvestorWithProducts(investor, productList); 
         } else {
-            throw new Exception("Investor with name " + name + " not found");
+            throw new Exception("Investor with Id " + Id + " not found");
         }
+    }
+
+    public List<Product> getInvestorProducts(Long Id) throws Exception{
+        Optional<Investor> optionalInvestor = investorRepository.findById(Id);
+        if (optionalInvestor != null) {
+            Investor investor = optionalInvestor.get();
+            List<Product> productList = investor.getInvestments();
+            return productList; 
+        } else {
+            throw new Exception("Investor with Id " + Id + " not found");
+        }
+    }
+
+    public Boolean isValidAgeForRetirement(Long id){
+        Optional<Investor> OptionalInvestor = investorRepository.findById(id);
+        if (OptionalInvestor.isPresent()) {
+            Investor investor = OptionalInvestor.get();
+            Integer investorAge = investor.getAge();
+            if (investorAge != null && investorAge < 65) {
+                return true;
+            } 
+        }
+        return false;
+    }
+
+    public List<Investor> getAllInvestors(){
+        List<Investor> investors = investorRepository.findAll();
+        if (investors != null) {
+            return investors;
+        }
+        return new ArrayList<Investor>();
     }
 
     private Investor combineInvestorWithProducts(Investor investor, List<Product> productList) {

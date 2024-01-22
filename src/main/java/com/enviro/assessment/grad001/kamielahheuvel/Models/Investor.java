@@ -85,6 +85,6 @@ public class Investor {
     @Override
     public String toString(){
         return "Investor[Id: " + id + ", Name: " + name + ", Age: " + age + 
-        ", Address: " + address + ", Contact: " + contact + "]";
+        ", Address: " + address + ", Contact: " + contact + ", investments: " + investments + "]";
     }
 }
