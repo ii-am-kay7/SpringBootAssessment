@@ -1,0 +1,28 @@
+body {
+    background-color: #ffffff; /* White background */
+    color: #333333; /* Dark text color */
+    font-family: Arial, sans-serif;
+}
+
+.blue-header {
+    background-color: #084e7c; /* Blue header background color */
+    color: #ffffff; /* White text color */
+    padding: 10px; /* Adjust padding as needed */
+    text-align: center; /* Center-align text within the header */
+}
+
+.card {
+    border: 1px solid #075183; /* Blue border */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Box shadow for a card-like effect */
+    padding: 20px;
+    margin: 20px auto; /* Center the card on the page */
+}
+
+form {
+    margin-top: 20px;
+}
+
+input, button {
+    margin-bottom: 10px;
+}

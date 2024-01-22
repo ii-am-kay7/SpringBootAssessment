@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import com.enviro.assessment.grad001.kamielahheuvel.Models.Investor;
@@ -20,6 +21,39 @@ public class InvestorController {
     @GetMapping("/hello")
     public String hello() {
         return "Hello, this is the InvestorController!";
+    }
+
+    @GetMapping("/check")
+    public String showInvestmentCheckForm() {
+        return "investment_check";
+    }
+
+    @PostMapping("/check")
+    public String processInvestmentCheck(@RequestParam String investedBefore,
+                                         @RequestParam(required = false) String investorName,
+                                         Model model) throws Exception {
+        System.out.println("investedBefore: " + investedBefore);
+        System.out.println("investorName: " + investorName);
+        if ("Yes".equalsIgnoreCase(investedBefore)) {
+            // User has invested before, try to find the investor
+            Investor existingInvestor = investorService.getInvestorByName(investorName);
+            if (existingInvestor != null) {
+                // Investor found, you can display details or redirect to another page
+                model.addAttribute("investor", existingInvestor);
+                return "investor_details";
+            } else {
+                // Investor not found, handle as needed (e.g., show an error message)
+                model.addAttribute("error", "Investor not found");
+                return "error_page";
+            }
+        } else if ("No".equalsIgnoreCase(investedBefore)) {
+            // User has not invested before, you can handle creating a new investor
+            return "new_investor_form"; // Redirect to a new investor form
+        } else {
+            // Handle other cases or show an error message
+            model.addAttribute("error", "Invalid input");
+            return "error_page";
+        }
     }
 
     @GetMapping("name/{investorName}")

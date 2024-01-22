@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+
+    <link rel="stylesheet" type="text/css" href="src\main\resources\templates\css\index.css">
+</head>
+
+<body>
+
+    <header class="blue-header">
+        <h1>Welcome to the Application!</h1>
+    </header>
+
+    <div class="card">
+        <form th:action="@{/investors/check}" method="post">
+            <label for="investedBefore">Have you invested before?</label>
+            <select id="investedBefore" name="investedBefore" required>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select>
+
+            <div th:if="${#strings.equalsIgnoreCase(investedBefore, 'yes')}">
+                <label for="investorName">Enter your name:</label>
+                <input type="text" id="investorName" name="investorName" placeholder="Your Name" required>
+                <p>Condition 1 executed</p>
+            </div>
+
+            <div th:if="${#strings.equalsIgnoreCase(investedBefore, 'no')}">
+                <p>Condition 2 executed</p>
+            </div>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -43,6 +43,10 @@ public class Product {
         return name;
     }
 
+    public Investor getInvestor(){
+        return investor;
+    }
+
     public BigDecimal getCurrentBalance(){
         return currentBalance;
     }
