@@ -1,10 +1,15 @@
 package com.enviro.assessment.grad001.kamielahheuvel.Services;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.enviro.assessment.grad001.kamielahheuvel.Models.AppExceptions;
+import com.enviro.assessment.grad001.kamielahheuvel.Models.Investor;
 import com.enviro.assessment.grad001.kamielahheuvel.Models.Product;
 import com.enviro.assessment.grad001.kamielahheuvel.Respositories.ProductRepository;
 
@@ -14,57 +19,40 @@ public class ProductService {
     @Autowired
     private  ProductRepository productRepository;
 
-    public List<Product> getProductsByInvestor(Long investorId) throws Exception{
-        List<Product> products = productRepository.findByInvestor(investorId);
-        if (products != null) {
-            return products;
+    public Product getProductsById(Long productId) throws Exception{
+        Optional<Product> OptionalProducts = productRepository.findById(productId);
+        if (OptionalProducts.isPresent()) {
+            return OptionalProducts.get();
         }else{
-            throw new Exception("Products by" + investorId + " not found");
+            throw new AppExceptions("Products by" + productId + " not found");
         }
     }
 
     public List<Product> getProductByName(String name) throws Exception{
         List<Product> products = productRepository.findByName(name);
-        if (products != null) {
+        if (!products.isEmpty()) {
             return products;
         }else{
-            throw new Exception("Products by" + name + " not found");
+            return new ArrayList<Product>();        
         }
     }
 
     public List<Product> getProductsByType(String Type) throws Exception{
         List<Product> products = productRepository.findByType(Type);
-        if (products != null) {
+        if (!products.isEmpty()) {
             return products;
         }else{
-            throw new Exception("Products by" + Type + " not found");
+            return new ArrayList<Product>();        
         }
     }
 
-    public List<Product> getProductsWithBalanceBetween(int firstValue, int secValue) throws Exception{
-        List<Product> products = productRepository.findByBalanceBetween(firstValue, secValue);
-        if (products != null) {
+    public List<Product> getProductsByCurrentBalance(BigDecimal balance) throws Exception{
+        List<Product> products = productRepository.findByCurrentBalance(balance);
+        if (!products.isEmpty()) {
             return products;
         }else{
-            throw new Exception("Products by between" + firstValue + " and " + secValue + " not found");
+            return new ArrayList<Product>();        
         }
     }
 
-    public List<Product> getProductsWithBalanceLessThanOrEqualTo(double maxPrice) throws Exception{
-        List<Product> products = productRepository.findByBalanceLessThanEqual(maxPrice);
-        if (products != null) {
-            return products;
-        }else{
-            throw new Exception("Products with balance less than or equal to " + maxPrice + " not found");
-        }
-    }
-
-    public List<Product> getProductsByInvestorAndType(Long investorId, String type) throws Exception{
-        List<Product> products = productRepository.findByInvestorAndType(investorId, type);
-        if (products != null) {
-            return products;
-        }else{
-            throw new Exception("Products by InvestorId " + investorId + " and Type " + type + " not found");
-        }
-    }
 }

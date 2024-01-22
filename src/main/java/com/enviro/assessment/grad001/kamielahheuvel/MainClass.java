@@ -1,6 +1,6 @@
 package com.enviro.assessment.grad001.kamielahheuvel;
 
-// import java.math.BigDecimal;
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.boot.CommandLineRunner;
@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import com.enviro.assessment.grad001.kamielahheuvel.Models.Investor;
-// import com.enviro.assessment.grad001.kamielahheuvel.Models.Product;
+import com.enviro.assessment.grad001.kamielahheuvel.Models.Product;
 // import com.enviro.assessment.grad001.kamielahheuvel.Models.WithdrawalNotice;
 import com.enviro.assessment.grad001.kamielahheuvel.Respositories.*;
 
@@ -21,10 +21,10 @@ public class MainClass {
 	}
 
 	 @Bean
-    public CommandLineRunner seedDemoData(InvestorRepository investorRepository) {
+    public CommandLineRunner seedDemoData(InvestorRepository investorRepository, ProductRepository productRepository) {
         return args -> {
             seedInvestors(investorRepository);
-            // seedProducts(productRepository);
+            seedProducts(productRepository, investorRepository);
             // seedWithdrawalNotices(withdrawalNoticeRepository);
         };
     }
@@ -36,12 +36,15 @@ public class MainClass {
         investorRepository.saveAll(List.of(investor1, investor2));
     }
 
-    // private void seedProducts(ProductRepository productRepository) {
-    //     Product product1 = new Product("Retirement Fund", "RETIREMENT", "Fund A", BigDecimal.valueOf(10000));
-    //     Product product2 = new Product("Savings Account", "SAVINGS", "Account B", BigDecimal.valueOf(5000));
-
-    //     productRepository.saveAll(List.of(product1, product2));
-    // }
+    private void seedProducts(ProductRepository productRepository, InvestorRepository investorRepository) {
+        Investor investor = new Investor();
+        // Set other properties for the investor if needed
+        investorRepository.save(investor);
+    
+        Product product1 = new Product((long) 1, "RETIREMENT", "Fund A", BigDecimal.valueOf(10000));        product1.setInvestor(investor);
+        Product product2 = new Product((long) 2, "SAVINGS", "Account B", BigDecimal.valueOf(5000));        product2.setInvestor(investor);
+        productRepository.saveAll(List.of(product1, product2));
+    }
 
     // private void seedWithdrawalNotices(WithdrawalNoticeRepository withdrawalNoticeRepository) {
     //     // Add logic to seed withdrawal notices

@@ -5,8 +5,7 @@ import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.enviro.assessment.grad001.kamielahheuvel.Models.Investor;
-import com.enviro.assessment.grad001.kamielahheuvel.Models.Product;
+import com.enviro.assessment.grad001.kamielahheuvel.Models.*;
 import com.enviro.assessment.grad001.kamielahheuvel.Respositories.InvestorRepository;
 
 @Service
@@ -20,7 +19,7 @@ public class InvestorService {
         if (investor != null) {
             return investor;
         }else{
-            throw new Exception("Investor with name " + name + " not found");
+            throw new AppExceptions("Investor with name " + name + " not found");
         }
         
     }
@@ -30,7 +29,7 @@ public class InvestorService {
         if (OptionalInvestor != null) {
             return OptionalInvestor.get();
         }else{
-            throw new Exception("Investor with id " + Id + " not found");
+            throw new AppExceptions("Investor with id " + Id + " not found");
         }
         
     }
@@ -42,7 +41,7 @@ public class InvestorService {
             List<Product> productList = investor.getInvestments();
             return combineInvestorWithProducts(investor, productList); 
         } else {
-            throw new Exception("Investor with Id " + Id + " not found");
+            throw new AppExceptions("Investor with Id " + Id + " not found");
         }
     }
 
@@ -53,7 +52,7 @@ public class InvestorService {
             List<Product> productList = investor.getInvestments();
             return productList; 
         } else {
-            throw new Exception("Investor with Id " + Id + " not found");
+            throw new AppExceptions("Investor with Id " + Id + " not found");
         }
     }
 

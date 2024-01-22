@@ -59,21 +59,13 @@ public class InvestorController {
     @GetMapping("name/{investorName}")
     public ResponseEntity<Investor> getInvestorByName(@PathVariable String investorName) throws Exception {
         Investor investor = investorService.getInvestorByName(investorName);
-        if (investor != null) {
-            return ResponseEntity.ok(investor);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(investor);
     }
 
     @GetMapping("id/{investorId}")
     public ResponseEntity<Investor> getInvestorById(@PathVariable Long investorId) throws Exception {
         Investor investor = investorService.getInvestorById(investorId);
-        if (investor != null) {
-            return ResponseEntity.ok(investor);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(investor);
     }
 
     @GetMapping("/{investorId}/products")
@@ -84,7 +76,8 @@ public class InvestorController {
 
     @GetMapping("/{investorId}/Investor&products")
     public ResponseEntity<Investor> getInvestorWithProducts(@PathVariable Long investorId) throws Exception {
-        Investor Investor = investorService.getInvestorWithProductsById(investorId);
-        return ResponseEntity.ok(Investor);
+        Investor investor = investorService.getInvestorWithProductsById(investorId);
+        return ResponseEntity.ok(investor);
     }
+   
 }

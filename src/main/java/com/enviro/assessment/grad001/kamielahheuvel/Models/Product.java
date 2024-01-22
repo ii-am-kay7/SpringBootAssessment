@@ -67,6 +67,10 @@ public class Product {
         this.currentBalance = CurrentBalance;
     }
 
+    public void setInvestor(Investor investor){
+        this.investor = investor;
+    }
+
     // Returns a string presentation of the product
     @Override
     public String toString(){
