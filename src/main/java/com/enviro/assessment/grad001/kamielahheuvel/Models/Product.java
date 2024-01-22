@@ -47,6 +47,10 @@ public class Product {
         return currentBalance;
     }
 
+    public void setId(Long Id){
+        this.id = Id;
+    }
+
     public void setType(String Type){
         this.type = Type;
     }

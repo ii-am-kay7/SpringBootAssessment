@@ -47,8 +47,8 @@ public class WithdrawalNotice {
         return withdrawalAmount;
     }
 
-    public void setWithdrawalAmount(BigDecimal WithdrawalAmount){
-        this.withdrawalAmount = WithdrawalAmount;
+    public void setId(Long Id){
+        this.id = Id;
     }
 
     public void setDate(LocalDateTime date){
@@ -57,6 +57,10 @@ public class WithdrawalNotice {
 
     public void setBankingDetails(String bankingDetails){
         this.bankingDetails = bankingDetails;
+    }
+
+    public void setWithdrawalAmount(BigDecimal WithdrawalAmount){
+        this.withdrawalAmount = WithdrawalAmount;
     }
 
     // Returns a string presentation of the WithdrawalNotice
