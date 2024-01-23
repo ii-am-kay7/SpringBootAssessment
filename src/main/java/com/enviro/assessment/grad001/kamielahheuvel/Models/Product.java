@@ -1,6 +1,9 @@
 package com.enviro.assessment.grad001.kamielahheuvel.Models;
 
 import java.math.BigDecimal;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -16,15 +19,14 @@ public class Product {
 
     // Adding relationship to Investor
     @ManyToOne
-    @JoinColumn(name = "investor_id")
+    @JsonBackReference
     private Investor investor;
 
     // Default constructor required by JPA
     public Product(){}
 
     // Parameterized constructor for creating an Investor instance with data
-    public Product(Long Id, String Type, String Name, BigDecimal CurrentBalance){
-        this.id = Id;
+    public Product(String Type, String Name, BigDecimal CurrentBalance){
         this.type = Type;
         this.name = Name;
         this.currentBalance = CurrentBalance;

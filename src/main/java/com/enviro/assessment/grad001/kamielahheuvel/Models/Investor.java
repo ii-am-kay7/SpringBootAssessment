@@ -2,6 +2,8 @@ package com.enviro.assessment.grad001.kamielahheuvel.Models;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -17,15 +19,15 @@ public class Investor {
     private String contact;
 
     // Establishing a one-to-many relationship with Product
-    @OneToMany(mappedBy = "investor", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "investor")
+    @JsonManagedReference
     private List<Product> investments;
 
     // Default constructor required by JPA
     public Investor(){}
 
     // Parameterized constructor for creating an Investor instance with data
-    public Investor(Long Id, String Name, Integer Age, String Address, String Contact){
-        this.id = Id;
+    public Investor(String Name, Integer Age, String Address, String Contact){
         this.name = Name;
         this.age = Age;
         this.address = Address;

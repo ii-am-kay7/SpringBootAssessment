@@ -2,7 +2,6 @@ package com.enviro.assessment.grad001.kamielahheuvel.Controllers;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +25,12 @@ public class ProductController {
     @GetMapping("/id/{productId}")
     public ResponseEntity<Product> getProductById(@PathVariable Long productId) throws Exception {
         Product products = productService.getProductsById(productId);
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/investorId/{investorId}")
+    public ResponseEntity<List<Product>> getProductByInvestorId(@PathVariable Long investorId) throws Exception {
+        List<Product> products = productService.getProductsByInvestorId(investorId);
         return ResponseEntity.ok(products);
     }
 

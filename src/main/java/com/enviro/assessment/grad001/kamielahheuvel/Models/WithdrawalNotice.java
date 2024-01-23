@@ -47,6 +47,18 @@ public class WithdrawalNotice {
         return withdrawalAmount;
     }
 
+    public Product getProduct(){
+        return product;
+    }
+
+    public Investor getInvestor(){
+        return product.getInvestor();
+    }
+
+    public BigDecimal getCurrentBalance(){
+        return product.getCurrentBalance();
+    }
+
     public void setId(Long Id){
         this.id = Id;
     }
@@ -61,6 +73,10 @@ public class WithdrawalNotice {
 
     public void setWithdrawalAmount(BigDecimal WithdrawalAmount){
         this.withdrawalAmount = WithdrawalAmount;
+    }
+
+    public void setProduct(Product product){
+        this.product = product;
     }
 
     // Returns a string presentation of the WithdrawalNotice

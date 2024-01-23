@@ -79,5 +79,11 @@ public class InvestorController {
         Investor investor = investorService.getInvestorWithProductsById(investorId);
         return ResponseEntity.ok(investor);
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Investor>> getAllInvestors() throws Exception {
+        List<Investor> investor = investorService.getAllInvestors();
+        return ResponseEntity.ok(investor);
+    }
    
 }
