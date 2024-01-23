@@ -127,4 +127,36 @@ public class InvestorService {
    
        return resultInvestor;
    }
+
+    // Update an existing investor
+    @Transactional
+    public Investor updateInvestor(Long id, Investor updatedInvestor) throws AppExceptions {
+        Optional<Investor> optionalExistingInvestor = investorRepository.findById(id);
+
+        if (optionalExistingInvestor.isPresent()) {
+            Investor existingInvestor = optionalExistingInvestor.get();
+
+            // Update fields of the existing investor with the values from the updated investor
+            existingInvestor.setName(updatedInvestor.getName());
+            existingInvestor.setAge(updatedInvestor.getAge());
+            existingInvestor.setAddress(updatedInvestor.getAddress());
+            existingInvestor.setContact(updatedInvestor.getContact());
+
+            // Save the updated investor
+            return investorRepository.save(existingInvestor);
+        } else {
+            throw new AppExceptions("Investor with id " + id + " not found");
+        }
+    }
+
+    // Delete an investor by ID
+    @Transactional
+    public void deleteInvestor(Long id) throws AppExceptions {
+        Optional<Investor> optionalInvestor = investorRepository.findById(id);
+        if (optionalInvestor.isPresent()) {
+            investorRepository.deleteById(id);
+        } else {
+            throw new AppExceptions("Investor with id " + id + " not found");
+        }
+    }
 }

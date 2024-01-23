@@ -1,6 +1,7 @@
 package com.enviro.assessment.grad001.kamielahheuvel;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.boot.CommandLineRunner;
@@ -11,7 +12,7 @@ import org.springframework.context.annotation.Bean;
 import com.enviro.assessment.grad001.kamielahheuvel.Models.AppExceptions;
 import com.enviro.assessment.grad001.kamielahheuvel.Models.Investor;
 import com.enviro.assessment.grad001.kamielahheuvel.Models.Product;
-// import com.enviro.assessment.grad001.kamielahheuvel.Models.WithdrawalNotice;
+import com.enviro.assessment.grad001.kamielahheuvel.Models.WithdrawalNotice;
 import com.enviro.assessment.grad001.kamielahheuvel.Respositories.*;
 
 @SpringBootApplication
@@ -23,12 +24,12 @@ public class MainClass {
 
     // CommandLineRunner bean to seed demo data when the application starts
     @Bean
-    public CommandLineRunner seedDemoData(InvestorRepository investorRepository, ProductRepository productRepository) {
+    public CommandLineRunner seedDemoData(InvestorRepository investorRepository, ProductRepository productRepository, WithdrawalNoticeRepository withdrawalNoticeRepository) {
         return args -> {
             // Seed investors and products
             seedInvestors(investorRepository);
             seedProducts(productRepository, investorRepository);
-            // seedWithdrawalNotices(withdrawalNoticeRepository);
+            seedWithdrawalNotices(withdrawalNoticeRepository, productRepository);
         };
     }
 
@@ -74,14 +75,35 @@ public class MainClass {
         }
     }
     
-    // Method to seed withdrawal notices linked to products with demo data 
-    // private void seedWithdrawalNotices(WithdrawalNoticeRepository withdrawalNoticeRepository) {
-    //     // Add logic to seed withdrawal notices
-    //     // Example:
-    //     WithdrawalNotice notice1 = new WithdrawalNotice(productRepository.findById(1L).orElse(null), BigDecimal.valueOf(500));
-    //     WithdrawalNotice notice2 = new WithdrawalNotice(productRepository.findById(2L).orElse(null), BigDecimal.valueOf(1000));
+    // Method to seed withdrawal notices linked to products with demo data
+    private void seedWithdrawalNotices(
+        WithdrawalNoticeRepository withdrawalNoticeRepository,
+        ProductRepository productRepository
+    ) {
+    try {
+        // Retrieve products from the database
+        Product product1 = productRepository.findByTypeAndName("RETIREMENT", "Fund A");
+        Product product2 = productRepository.findByTypeAndName("SAVINGS", "Account B");
 
-    //     withdrawalNoticeRepository.saveAll(List.of(notice1, notice2));
-    // }
+        if (product1 != null && product2 != null) {
+            // Link withdrawal notices to product1 and product2
+            WithdrawalNotice notice1 = new WithdrawalNotice(BigDecimal.valueOf(500), LocalDateTime.now(), "BankingDetails1");
+            notice1.setProduct(product1);
+
+            WithdrawalNotice notice2 = new WithdrawalNotice(BigDecimal.valueOf(1000), LocalDateTime.now(), "BankingDetails2");
+            notice2.setProduct(product2);
+
+            // Save withdrawal notices to the database
+            withdrawalNoticeRepository.saveAll(List.of(notice1, notice2));
+        } else {
+            // Handle the case where products are not found
+            throw new AppExceptions("Products not found");
+        }
+    } catch (Exception e) {
+        // Handle exceptions related to saving withdrawal notices or finding products
+        System.err.println("Error seeding withdrawal notices: " + e.getMessage());
+    }
+}
+
 
 }

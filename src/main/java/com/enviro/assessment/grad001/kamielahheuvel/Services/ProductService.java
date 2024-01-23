@@ -107,4 +107,36 @@ public class ProductService {
          }
      }
 
+       // Update an existing product
+    @Transactional
+    public void updateProduct(Long id, Product updatedProduct) throws AppExceptions {
+        Optional<Product> optionalExistingProduct = productRepository.findById(id);
+
+        if (optionalExistingProduct.isPresent()) {
+            Product existingProduct = optionalExistingProduct.get();
+
+            // Update fields of the existing product with the values from the updated product
+            existingProduct.setType(updatedProduct.getType());
+            existingProduct.setCurrentBalance(updatedProduct.getCurrentBalance());
+            existingProduct.setName(updatedProduct.getName());
+
+            // Save the updated product
+            productRepository.save(existingProduct);
+        } else {
+            throw new AppExceptions("Product with ID " + id + " not found");
+        }
+    }
+
+    // Delete a product by ID
+    @Transactional
+    public void deleteProduct(Long id) throws AppExceptions {
+        Optional<Product> optionalProduct = productRepository.findById(id);
+
+        if (optionalProduct.isPresent()) {
+            productRepository.deleteById(id);
+        } else {
+            throw new AppExceptions("Product with ID " + id + " not found");
+        }
+    }
+
 }

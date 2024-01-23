@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class WithdrawalNoticeService {
@@ -19,6 +21,7 @@ public class WithdrawalNoticeService {
     @Autowired
     private NotificationServcie notificationServcie;
 
+    // Transactional method to create a new withdrawal notice
     @Transactional
     public void createWithdrawalNotice(WithdrawalNotice withdrawalNotice) {
         // Validate withdrawal and perform necessary checks
@@ -31,12 +34,12 @@ public class WithdrawalNoticeService {
         notifyInvestor(withdrawalNotice);
     }
 
-
+    // Validate withdrawal details
     public void validateWithdrawal(Long withdrawalNoticeId) {
         WithdrawalNotice withdrawalNotice = withdrawalNoticeRepository.findById(withdrawalNoticeId).orElse(null);
 
         if (withdrawalNotice == null) {
-           throw new AppExceptions("Withdrawl Notice with" + withdrawalNoticeId + " not found");
+            throw new AppExceptions("Withdrawal Notice with ID " + withdrawalNoticeId + " not found");
         }
 
         // Validate PRODUCT is RETIREMENT and investor's age is greater than 65
@@ -49,31 +52,35 @@ public class WithdrawalNoticeService {
         validateWithdrawalLimit(withdrawalNotice);
     }
 
+    // Validate PRODUCT is RETIREMENT and investor's age is greater than 65
     private void validateProductAndAge(WithdrawalNotice withdrawalNotice) {
         String productType = withdrawalNotice.getProduct().getType();
         Integer age = withdrawalNotice.getInvestor().getAge();
 
         if ("RETIREMENT".equalsIgnoreCase(productType) && isInvestorAgeGreaterThan65(age)) {
-            throw new AppExceptions("Investor must at least be 66 years old for RETIREMENT ");
+            throw new AppExceptions("Investor must be at least 66 years old for RETIREMENT");
         }
     }
 
+    // Check if investor's age is greater than 65
     private boolean isInvestorAgeGreaterThan65(Integer age) {
         return age != null && age > 65;
     }
 
+    // Validate WITHDRAWAL AMOUNT is greater than current BALANCE
     private void validateWithdrawalAmount(WithdrawalNotice withdrawalNotice) {
         BigDecimal withdrawalAmount = withdrawalNotice.getWithdrawalAmount();
-        BigDecimal currentBalance =withdrawalNotice.getCurrentBalance(); 
+        BigDecimal currentBalance = withdrawalNotice.getCurrentBalance();
 
         if (withdrawalAmount.compareTo(currentBalance) > 0) {
             throw new AppExceptions("Withdrawal amount is greater than current balance");
         }
     }
 
+    // Validate Investors cannot withdraw an AMOUNT more than 90% of the current BALANCE
     private void validateWithdrawalLimit(WithdrawalNotice withdrawalNotice) {
         BigDecimal withdrawalAmount = withdrawalNotice.getWithdrawalAmount();
-        BigDecimal currentBalance = withdrawalNotice.getCurrentBalance(); 
+        BigDecimal currentBalance = withdrawalNotice.getCurrentBalance();
 
         BigDecimal withdrawalLimit = currentBalance.multiply(BigDecimal.valueOf(0.9));
         if (withdrawalAmount.compareTo(withdrawalLimit) > 0) {
@@ -81,15 +88,16 @@ public class WithdrawalNoticeService {
         }
     }
 
+    // Notify the investor about the withdrawal
     private void notifyInvestor(WithdrawalNotice withdrawalNotice) {
         String notificationMessage = buildNotificationMessage(withdrawalNotice);
 
-        notificationServcie.sendNotification(withdrawalNotice.getInvestor().getName(), "Withdrawal Notice", notificationMessage);
-
+        notificationServcie.sendNotification(withdrawalNotice.getInvestor().getContact(), "Withdrawal Notice", notificationMessage);
     }
 
+    // Build notification message with withdrawal details
     private String buildNotificationMessage(WithdrawalNotice withdrawalNotice) {
-        BigDecimal currentBalance = withdrawalNotice.getCurrentBalance(); 
+        BigDecimal currentBalance = withdrawalNotice.getCurrentBalance();
 
         return "Withdrawal Notice:\n" +
                 "Balance before withdrawal: " + currentBalance + "\n" +
@@ -97,8 +105,43 @@ public class WithdrawalNoticeService {
                 "Closing balance: " + calculateClosingBalance(currentBalance, withdrawalNotice.getWithdrawalAmount());
     }
 
+    // Calculate closing balance after withdrawal
     private BigDecimal calculateClosingBalance(BigDecimal currentBalance, BigDecimal withdrawalAmount) {
         return currentBalance.subtract(withdrawalAmount);
     }
 
+    // Retrieve all withdrawal notices
+    public List<WithdrawalNotice> getAllWithdrawalNotices() {
+        return withdrawalNoticeRepository.findAll();
+    }
+
+    // Retrieve a specific withdrawal notice by ID
+    public WithdrawalNotice getWithdrawalNoticeById(Long id) {
+        Optional<WithdrawalNotice> optionalWithdrawalNotice = withdrawalNoticeRepository.findById(id);
+        return optionalWithdrawalNotice.orElse(null);
+    }
+
+    // Update an existing withdrawal notice
+    @Transactional
+    public void updateWithdrawalNotice(Long id, WithdrawalNotice updatedWithdrawalNotice) {
+        Optional<WithdrawalNotice> optionalExistingWithdrawalNotice = withdrawalNoticeRepository.findById(id);
+
+        if (optionalExistingWithdrawalNotice.isPresent()) {
+            WithdrawalNotice existingWithdrawalNotice = optionalExistingWithdrawalNotice.get();
+
+            // Update fields of the existing withdrawal notice with the values from the updated withdrawal notice
+            existingWithdrawalNotice.setWithdrawalAmount(updatedWithdrawalNotice.getWithdrawalAmount());
+            existingWithdrawalNotice.setDate(updatedWithdrawalNotice.getDate());
+            existingWithdrawalNotice.setBankingDetails(updatedWithdrawalNotice.getBankingDetails());
+
+            // Save the updated withdrawal notice
+            withdrawalNoticeRepository.save(existingWithdrawalNotice);
+        }
+    }
+
+    // Delete a withdrawal notice by ID
+    @Transactional
+    public void deleteWithdrawalNotice(Long id) {
+        withdrawalNoticeRepository.deleteById(id);
+    }
 }

@@ -22,6 +22,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     // Method to find products by type
     List<Product> findByType(String type);
 
-    // Method by find by currentBalance 
+    // Method by find product by currentBalance 
     List<Product> findByCurrentBalance(BigDecimal balance);
+
+    // Method to find product by type and name
+    Product findByTypeAndName(String string, String string2);
 }

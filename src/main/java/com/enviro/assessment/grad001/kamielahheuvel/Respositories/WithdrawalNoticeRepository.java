@@ -10,8 +10,9 @@ import com.enviro.assessment.grad001.kamielahheuvel.Models.WithdrawalNotice;
 
 public interface WithdrawalNoticeRepository extends JpaRepository<WithdrawalNotice, Long>{
 
-    // Method to find withdrawal by Product
+    // Method to find withdrawal notice by Product
     List<WithdrawalNotice> findByProductId(Product productId);
-    Optional<WithdrawalNotice> findById(Long Id);
-    
+
+    // Method to find notice by id
+    Optional<WithdrawalNotice> findById(Long Id);   
 }
