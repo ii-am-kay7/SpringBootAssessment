@@ -48,8 +48,8 @@ public class MainClass {
         }
     }
 
-     // Method to seed products linked to investors with demo data
-     private void seedProducts(ProductRepository productRepository, InvestorRepository investorRepository) {
+    // Method to seed products linked to investors with demo data
+    private void seedProducts(ProductRepository productRepository, InvestorRepository investorRepository) {
         try {
             // Retrieve investors from the database
             Investor investor1 = investorRepository.findByName("John Doe");
@@ -74,36 +74,34 @@ public class MainClass {
             System.err.println("Error seeding products: " + e.getMessage());
         }
     }
-    
+
     // Method to seed withdrawal notices linked to products with demo data
     private void seedWithdrawalNotices(
         WithdrawalNoticeRepository withdrawalNoticeRepository,
         ProductRepository productRepository
     ) {
-    try {
-        // Retrieve products from the database
-        Product product1 = productRepository.findByTypeAndName("RETIREMENT", "Fund A");
-        Product product2 = productRepository.findByTypeAndName("SAVINGS", "Account B");
+        try {
+            // Retrieve products from the database
+            Product product1 = productRepository.findByTypeAndName("RETIREMENT", "Fund A");
+            Product product2 = productRepository.findByTypeAndName("SAVINGS", "Account B");
 
-        if (product1 != null && product2 != null) {
-            // Link withdrawal notices to product1 and product2
-            WithdrawalNotice notice1 = new WithdrawalNotice(BigDecimal.valueOf(500), LocalDateTime.now(), "BankingDetails1");
-            notice1.setProduct(product1);
+            if (product1 != null && product2 != null) {
+                // Link withdrawal notices to product1 and product2
+                WithdrawalNotice notice1 = new WithdrawalNotice(BigDecimal.valueOf(500), LocalDateTime.now(), "BankingDetails1");
+                notice1.setProduct(product1);
 
-            WithdrawalNotice notice2 = new WithdrawalNotice(BigDecimal.valueOf(1000), LocalDateTime.now(), "BankingDetails2");
-            notice2.setProduct(product2);
+                WithdrawalNotice notice2 = new WithdrawalNotice(BigDecimal.valueOf(1000), LocalDateTime.now(), "BankingDetails2");
+                notice2.setProduct(product2);
 
-            // Save withdrawal notices to the database
-            withdrawalNoticeRepository.saveAll(List.of(notice1, notice2));
-        } else {
-            // Handle the case where products are not found
-            throw new AppExceptions("Products not found");
+                // Save withdrawal notices to the database
+                withdrawalNoticeRepository.saveAll(List.of(notice1, notice2));
+            } else {
+                // Handle the case where products are not found
+                throw new AppExceptions("Products not found");
+            }
+        } catch (Exception e) {
+            // Handle exceptions related to saving withdrawal notices or finding products
+            System.err.println("Error seeding withdrawal notices: " + e.getMessage());
         }
-    } catch (Exception e) {
-        // Handle exceptions related to saving withdrawal notices or finding products
-        System.err.println("Error seeding withdrawal notices: " + e.getMessage());
     }
-}
-
-
 }

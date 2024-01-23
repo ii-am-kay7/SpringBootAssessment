@@ -65,7 +65,7 @@
     </header>
 
     <div class="card">
-        <form th:action="@{/products/new_product.action}" method="post" id="productForm">
+        <form th:action="@{/products/{investorId}/new_product.action(investorId=${investorId})}" method="post" id="productForm">
             <label for="type">Type:</label>
             <input type="text" id="type" name="type" required>
 
@@ -88,7 +88,7 @@
     
                 // Using AJAX to submit the form data as URL-encoded parameters
                 var xhr = new XMLHttpRequest();
-                xhr.open("POST", "/products/new_product.action", true);
+                xhr.open("POST", "/products/" + investorId + "/new_product.action", true);
                 xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     
                 var formData = "type=" + encodeURIComponent(type) +
@@ -99,7 +99,8 @@
                     if (xhr.readyState === 4) {
                         if (xhr.status === 201) {
                             // Successful response, redirect to product.html or handle as needed
-                            window.location.href = "/products/" + investorId + "/list";
+                            alert("Product created successfully!");
+                            window.location.href = "/products/" + investorId + "/list"
                         } else {
                             // Handle errors here
                             console.error("Error creating product:", JSON.parse(xhr.responseText));

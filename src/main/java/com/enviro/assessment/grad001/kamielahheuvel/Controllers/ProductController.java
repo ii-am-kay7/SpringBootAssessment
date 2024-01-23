@@ -68,17 +68,19 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-    // Endpoint to show the new product form
-    @GetMapping("/new_product")
-    public ModelAndView showNewProductForm() {
+   // Endpoint to show the new product form
+    @GetMapping("/{investorId}/new_product")
+    public ModelAndView showNewProductForm(@PathVariable Long investorId) {
         ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("investorId", investorId);
         modelAndView.setViewName("new_product");
         return modelAndView;
     }
 
-    // Endpoint to create a new product
-    @PostMapping("/new_product.action")
+   // Endpoint to create a new product
+    @PostMapping("/{investorId}/new_product.action")
     public ResponseEntity<Product> createNewProduct(
+            @PathVariable Long investorId,
             @RequestParam String type,
             @RequestParam String name,
             @RequestParam BigDecimal currentBalance) {
@@ -89,6 +91,9 @@ public class ProductController {
 
             // Call the service method to create the new product
             Product createdProduct = productService.createNewProduct(newProduct);
+
+            // Set the investorId for the newly created product
+            newProduct.setInvestorId(investorId);
 
             // Return the created product in the response
             return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);

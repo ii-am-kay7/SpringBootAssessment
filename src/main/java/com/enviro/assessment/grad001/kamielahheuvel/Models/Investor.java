@@ -19,7 +19,7 @@ public class Investor {
     private String contact;
 
     // Establishing a one-to-many relationship with Product
-    @OneToMany(mappedBy = "investor")
+    @OneToMany(mappedBy = "investor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference
     private List<Product> investments;
 
