@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investor's Withdrawal Notices</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .blue-header {
+            background-color: #084e7c; 
+            color: #ffffff;
+            padding: 10px; 
+            text-align: center;
+        }
+
+        .header-links {
+            margin-top: 20px; 
+            text-align: center;
+        }
+
+        .header-links a {
+            border: 1px solid #075183; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+            padding: 20px;
+            margin: 0 10px; 
+            color: black;
+            text-decoration: none;
+        }
+
+        .card {
+            border: 1px solid #075183; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+            padding: 20px;
+            margin: 20px auto;
+        }
+
+        table {
+            width: 100%; /* Adjusted to 100% to match the provided style */
+            margin-top: 20px;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #084e7c;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="blue-header">
+        <h2>Investor's Withdrawal Notices</h2>
+    </header>
+
+    <div class="header-links">
+        <a href="investor.html">View Investor Details</a>
+        <a href="product.html">View Products</a>
+    </div>
+
+    <div class="card">
+        <table>
+            <thead>
+                <tr>
+                    <th>Withdrawal Amount</th>
+                    <th>Date</th>
+                    <th>Banking Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="withdrawalNotice : ${withdrawalNoticeList}">
+                    <td th:text="${withdrawalNotice.withdrawalAmount}"></td>
+                    <td th:text="${withdrawalNotice.date}"></td>
+                    <td th:text="${withdrawalNotice.bankingDetails}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

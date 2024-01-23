@@ -64,8 +64,8 @@
     </header>
 
     <div class="header-links">
-        <a href="product.html">View Products</a>
-        <a href="withdrawalNotice.html"> View Withdrawal Notice</a>
+        <a th:href="@{/products/{investorId}/list(investorId=${investor.id})}">View Products</a>
+        <a th:href="@{/withdrawals/{investorId}/list(investorId=${investor.id})}">View Withdrawal Notice</a>
     </div>
 
     <div class="card">

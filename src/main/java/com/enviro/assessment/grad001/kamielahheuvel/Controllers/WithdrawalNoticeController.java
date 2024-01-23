@@ -1,12 +1,17 @@
 package com.enviro.assessment.grad001.kamielahheuvel.Controllers;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.enviro.assessment.grad001.kamielahheuvel.Models.AppExceptions;
 import com.enviro.assessment.grad001.kamielahheuvel.Models.WithdrawalNotice;
 import com.enviro.assessment.grad001.kamielahheuvel.Services.WithdrawalNoticeService;
 
@@ -17,18 +22,45 @@ public class WithdrawalNoticeController {
     @Autowired
     private WithdrawalNoticeService withdrawalNoticeService;
 
-     // Hello endpoint for testing
-     @GetMapping("/hello")
-     public String hello() {
-        return "Hello, this is the WithdrawalNoticeController!";
-     }
-
-     // Endpoint to create a new withdrawal notice
-    @PostMapping("/new_withdrawalNotice")
-    public ResponseEntity<String> createWithdrawalNotice(@RequestBody WithdrawalNotice withdrawalNotice) {
-        withdrawalNoticeService.createWithdrawalNotice(withdrawalNotice);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Withdrawal notice created successfully.");
+    // Hello endpoint for testing
+    @GetMapping("/hello")
+    public String hello() {
+    return "Hello, this is the WithdrawalNoticeController!";
     }
+
+   // Endpoint to show the new withdrawal notice form
+    @GetMapping("/new_withdrawalNotice")
+    public ModelAndView showNewWithdrawalNoticeForm() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("new_withdrawalNotice");
+        return modelAndView;
+    }
+
+    // Endpoint to create a new withdrawal notice
+    @PostMapping("/new_withdrawalNotice.action")
+    public ResponseEntity<WithdrawalNotice> createNewWithdrawalNotice(
+            @RequestParam BigDecimal withdrawalAmount,
+            @RequestParam String date,
+            @RequestParam String bankingDetails) {
+
+        try {
+            // Convert the date string to LocalDateTime, adjust as needed
+            LocalDateTime parsedDate = LocalDateTime.parse(date);
+
+            // Create a new instance of WithdrawalNotice using the provided request parameters
+            WithdrawalNotice newWithdrawalNotice = new WithdrawalNotice(withdrawalAmount, parsedDate, bankingDetails);
+
+            // Call the service method to create the new withdrawal notice
+            WithdrawalNotice createdWithdrawalNotice = withdrawalNoticeService.createWithdrawalNotice(newWithdrawalNotice);
+
+            // Return the created withdrawal notice in the response
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdWithdrawalNotice);
+        } catch (DateTimeParseException | AppExceptions e) {
+            // Handle exceptions appropriately
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
 
     // Endpoint to get all withdrawal notices
     @GetMapping("/allWithdrawals")

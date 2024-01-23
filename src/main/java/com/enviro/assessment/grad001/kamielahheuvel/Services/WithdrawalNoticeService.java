@@ -23,15 +23,15 @@ public class WithdrawalNoticeService {
 
     // Transactional method to create a new withdrawal notice
     @Transactional
-    public void createWithdrawalNotice(WithdrawalNotice withdrawalNotice) {
+    public WithdrawalNotice createWithdrawalNotice(WithdrawalNotice withdrawalNotice) {
         // Validate withdrawal and perform necessary checks
         validateWithdrawal(withdrawalNotice.getId());
 
-        // Save the withdrawal notice
-        withdrawalNoticeRepository.save(withdrawalNotice);
-
         // Notify the investor
         notifyInvestor(withdrawalNotice);
+
+         // Save the withdrawal notice
+        return withdrawalNoticeRepository.save(withdrawalNotice);
     }
 
     // Validate withdrawal details

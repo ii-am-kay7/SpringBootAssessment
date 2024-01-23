@@ -14,5 +14,6 @@ public interface WithdrawalNoticeRepository extends JpaRepository<WithdrawalNoti
     List<WithdrawalNotice> findByProductId(Product productId);
 
     // Method to find notice by id
-    Optional<WithdrawalNotice> findById(Long Id);   
+    Optional<WithdrawalNotice> findById(Long Id); 
+      
 }

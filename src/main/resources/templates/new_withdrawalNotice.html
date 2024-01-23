@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Withdrawal Notice Form</title>
+
+    <style>
+        body {
+            background-color: #ffffff; /* White background */
+            color: #333333; /* Dark text color */
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .blue-header {
+            background-color: #084e7c; 
+            color: #ffffff;
+            padding: 10px; 
+            text-align: center;
+        }
+
+        .card {
+            border: 1px solid #075183;
+            border-radius: 8px; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 20px auto; 
+        }
+
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #d1ce14;
+            color: black;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #ccda15;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="blue-header">
+        <h2>New Withdrawal Notice Form</h2>    
+    </header>
+
+    <div class="card">
+        <form th:action="@{/withdrawals/new_withdrawalNotice.action}" method="post" id="withdrawalNoticeForm">
+            <label for="withdrawalAmount">Withdrawal Amount:</label>
+            <input type="text" id="withdrawalAmount" name="withdrawalAmount" required>
+
+            <label for="date">Date:</label>
+            <input type="text" id="date" name="date" required>
+
+            <label for="bankingDetails">Banking Details:</label>
+            <input type="text" id="bankingDetails" name="bankingDetails" required>
+
+            <button type="button" onclick="submitForm()">Submit</button>
+        </form>
+
+        <script>
+            function submitForm() {
+                var withdrawalAmount = document.getElementById('withdrawalAmount').value;
+                var date = document.getElementById('date').value;
+                var bankingDetails = document.getElementById('bankingDetails').value;
+    
+                // You can perform additional validations here if needed
+    
+                // Using AJAX to submit the form data as URL-encoded parameters
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/withdrawals/new_withdrawalNotice.action", true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    
+                var formData = "withdrawalAmount=" + encodeURIComponent(withdrawalAmount) +
+                    "&date=" + encodeURIComponent(date) +
+                    "&bankingDetails=" + encodeURIComponent(bankingDetails);
+    
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 201) {
+                            // Successful response, redirect or handle as needed
+                            alert("Withdrawal Notice created successfully!");
+                        } else {
+                            // Handle errors here
+                            console.error("Error creating withdrawal notice:", JSON.parse(xhr.responseText));
+                        }
+                    }
+                };
+    
+                xhr.send(formData);
+            }
+        </script>
+    </div>
+</body>
+</html>

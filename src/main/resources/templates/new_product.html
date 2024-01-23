@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Product Form</title>
+    <style>
+        body {
+            background-color: #ffffff; 
+            color: #333333;
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .blue-header {
+            background-color: #084e7c; 
+            color: #ffffff;
+            padding: 10px; 
+            text-align: center;
+        }
+
+        .card {
+            border: 1px solid #075183;
+            border-radius: 8px; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 20px auto; 
+        }
+
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #d1ce14;
+            color: black;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #ccda15;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="blue-header">
+        <h2>New Product Form</h2>    
+    </header>
+
+    <div class="card">
+        <form th:action="@{/products/new_product.action}" method="post" id="productForm">
+            <label for="type">Type:</label>
+            <input type="text" id="type" name="type" required>
+
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="currentBalance">Current Balance:</label>
+            <input type="text" id="currentBalance" name="currentBalance" required>
+
+            <button type="button" onclick="submitForm()">Submit</button>
+        </form>
+
+        <script>
+            function submitForm() {
+                var type = document.getElementById('type').value;
+                var name = document.getElementById('name').value;
+                var currentBalance = document.getElementById('currentBalance').value;
+    
+                // You can perform additional validations here if needed
+    
+                // Using AJAX to submit the form data as URL-encoded parameters
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/products/new_product.action", true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    
+                var formData = "type=" + encodeURIComponent(type) +
+                    "&name=" + encodeURIComponent(name) +
+                    "&currentBalance=" + encodeURIComponent(currentBalance);
+    
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 201) {
+                            // Successful response, redirect to product.html or handle as needed
+                            window.location.href = "/products/" + investorId + "/list";
+                        } else {
+                            // Handle errors here
+                            console.error("Error creating product:", JSON.parse(xhr.responseText));
+                        }
+                    }
+                };
+    
+                xhr.send(formData);
+            }
+        </script>
+    </div>
+</body>
+</html>

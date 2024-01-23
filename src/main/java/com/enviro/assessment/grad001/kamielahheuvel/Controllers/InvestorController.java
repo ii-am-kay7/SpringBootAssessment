@@ -27,7 +27,7 @@ public class InvestorController {
         return "Hello, this is the InvestorController!";
     }
 
-    // Endpoint to show the investment check form
+    // Endpoint to show the new investor 
     @GetMapping("/new_investor")
     public ModelAndView showNewInvestorForm() {
         ModelAndView modelAndView = new ModelAndView();

@@ -4,9 +4,12 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.enviro.assessment.grad001.kamielahheuvel.Models.AppExceptions;
 import com.enviro.assessment.grad001.kamielahheuvel.Models.Product;
 import com.enviro.assessment.grad001.kamielahheuvel.Services.ProductService;
 
@@ -30,11 +33,18 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-    // Endpoint to get products associated with a specific investor ID
+    // Endpoint to get products by investor ID
     @GetMapping("/investorId/{investorId}")
-    public ResponseEntity<List<Product>> getProductByInvestorId(@PathVariable Long investorId) throws Exception {
-        List<Product> products = productService.getProductsByInvestorId(investorId);
-        return ResponseEntity.ok(products);
+    public ModelAndView showInvestorProducts(@PathVariable Long investorId) {
+        ModelAndView modelAndView = new ModelAndView();
+    
+        List<Product> productList = productService.getProductsByInvestorId(investorId);
+    
+        modelAndView.addObject("productList", productList);
+        modelAndView.addObject("investorId", investorId);
+        modelAndView.setViewName("products");
+    
+        return modelAndView;
     }
 
     // Endpoint to get products by name
@@ -58,11 +68,48 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
+    // Endpoint to show the new product form
+    @GetMapping("/new_product")
+    public ModelAndView showNewProductForm() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("new_product");
+        return modelAndView;
+    }
+
     // Endpoint to create a new product
-    @PostMapping("/new_product")
-    public ResponseEntity<Product> createProduct(@RequestBody Product newProduct) throws Exception {
-        Product createdProduct = productService.createNewProduct(newProduct);
-        return ResponseEntity.ok(createdProduct);
+    @PostMapping("/new_product.action")
+    public ResponseEntity<Product> createNewProduct(
+            @RequestParam String type,
+            @RequestParam String name,
+            @RequestParam BigDecimal currentBalance) {
+
+        try {
+            // Create a new instance of Product using the provided request parameters
+            Product newProduct = new Product(type, name, currentBalance);
+
+            // Call the service method to create the new product
+            Product createdProduct = productService.createNewProduct(newProduct);
+
+            // Return the created product in the response
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
+        } catch (AppExceptions e) {
+            // Handle exceptions appropriately
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
+    // Endpoint to show the investor's product list
+    @GetMapping("/{investorId}/list")
+    public ModelAndView showInvestorProductList(@PathVariable Long investorId) {
+        ModelAndView modelAndView = new ModelAndView();
+
+        List<Product> productList = productService.getProductsByInvestorId(investorId);
+
+        modelAndView.addObject("productList", productList);
+        modelAndView.addObject("investorId", investorId);
+        modelAndView.setViewName("products");
+
+        return modelAndView;
     }
 
     // Endpoint to update an existing product by ID
