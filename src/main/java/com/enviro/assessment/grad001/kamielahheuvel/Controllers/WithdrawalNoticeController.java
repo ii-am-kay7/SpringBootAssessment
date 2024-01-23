@@ -24,7 +24,7 @@ public class WithdrawalNoticeController {
      }
 
      // Endpoint to create a new withdrawal notice
-    @PostMapping("/create")
+    @PostMapping("/new_withdrawalNotice")
     public ResponseEntity<String> createWithdrawalNotice(@RequestBody WithdrawalNotice withdrawalNotice) {
         withdrawalNoticeService.createWithdrawalNotice(withdrawalNotice);
         return ResponseEntity.status(HttpStatus.CREATED).body("Withdrawal notice created successfully.");

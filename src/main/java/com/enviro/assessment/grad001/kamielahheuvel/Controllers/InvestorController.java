@@ -1,12 +1,15 @@
 package com.enviro.assessment.grad001.kamielahheuvel.Controllers;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.enviro.assessment.grad001.kamielahheuvel.Models.AppExceptions;
 import com.enviro.assessment.grad001.kamielahheuvel.Models.Investor;
 import com.enviro.assessment.grad001.kamielahheuvel.Models.Product;
 import com.enviro.assessment.grad001.kamielahheuvel.Services.InvestorService;
@@ -25,45 +28,71 @@ public class InvestorController {
     }
 
     // Endpoint to show the investment check form
-    @GetMapping("/check")
-    public String showInvestmentCheckForm() {
-        return "investment_check";
+    @GetMapping("/new_investor")
+    public ModelAndView showNewInvestorForm() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("new_investor");
+        return modelAndView;
     }
 
-    // Endpoint to process the investment check form
-    @PostMapping("/check")
-    public String processInvestmentCheck(@RequestParam String investedBefore,
-                                         @RequestParam(required = false) String investorName,
-                                         Model model) throws Exception {
-        System.out.println("investedBefore: " + investedBefore);
-        System.out.println("investorName: " + investorName);
-        if ("Yes".equalsIgnoreCase(investedBefore)) {
-            // User has invested before, try to find the investor
-            Investor existingInvestor = investorService.getInvestorByName(investorName);
-            if (existingInvestor != null) {
-                // Investor found, you can display details or redirect to another page
-                model.addAttribute("investor", existingInvestor);
-                return "investor_details";
-            } else {
-                // Investor not found, handle as needed (e.g., show an error message)
-                model.addAttribute("error", "Investor not found");
-                return "error_page";
-            }
-        } else if ("No".equalsIgnoreCase(investedBefore)) {
-            // User has not invested before, you can handle creating a new investor
-            return "new_investor_form"; // Redirect to a new investor form
-        } else {
-            // Handle other cases or show an error message
-            model.addAttribute("error", "Invalid input");
-            return "error_page";
+    // Endpoint to create a new investor
+    @PostMapping("/new_investor.action")
+    public ResponseEntity<Investor> createNewInvestor(
+            @RequestParam String name,
+            @RequestParam Integer age,
+            @RequestParam String address,
+            @RequestParam String contact) {
+
+        try {
+            // Create a new instance of Investor using the provided request parameters
+            Investor newInvestor = new Investor(name, age, address, contact);
+
+            // Call the service method to create the new investor
+            Investor createdInvestor = investorService.createNewInvestor(newInvestor);
+
+            // Return the created investor in the response
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdInvestor);
+        } catch (AppExceptions e) {
+            // Handle exceptions appropriately
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 
     // Endpoint to get an investor by name
     @GetMapping("name/{investorName}")
-    public ResponseEntity<Investor> getInvestorByName(@PathVariable String investorName) throws Exception {
-        Investor investor = investorService.getInvestorByName(investorName);
-        return ResponseEntity.ok(investor);
+    public ModelAndView getInvestorByName(@PathVariable String investorName) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("investor");
+
+        try {
+            Investor investor = investorService.getInvestorByName(investorName);
+            modelAndView.addObject("investor", investor); // Add the Investor object to the model
+        } catch (Exception e) {
+            modelAndView.setViewName("error"); // Set the view name for error handling
+            modelAndView.addObject("errorMessage", "Investor not found"); // Add error message to the model
+        }
+
+        return modelAndView;
+    }
+
+    // Endpoint to handle the form submission when an existing investor enters their name
+    @PostMapping("/name")
+    public ModelAndView submitInvestorName(@RequestParam String investorName) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("investor");
+
+        try {
+            Investor investor = investorService.getInvestorByName(investorName);
+            modelAndView.addObject("investor", investor);
+        } catch (UnsupportedEncodingException e) {
+            modelAndView.setViewName("error");
+            modelAndView.addObject("errorMessage", "Error decoding investorName");
+        } catch (Exception e) {
+            modelAndView.setViewName("error");
+            modelAndView.addObject("errorMessage", "Investor not found");
+        }
+
+        return modelAndView;
     }
 
     // Endpoint to get an investor by ID

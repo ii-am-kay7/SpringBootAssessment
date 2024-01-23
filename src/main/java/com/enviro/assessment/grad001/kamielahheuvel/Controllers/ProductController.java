@@ -59,7 +59,7 @@ public class ProductController {
     }
 
     // Endpoint to create a new product
-    @PostMapping("/create")
+    @PostMapping("/new_product")
     public ResponseEntity<Product> createProduct(@RequestBody Product newProduct) throws Exception {
         Product createdProduct = productService.createNewProduct(newProduct);
         return ResponseEntity.ok(createdProduct);

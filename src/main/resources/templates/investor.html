@@ -3,14 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
-
-    <link rel="stylesheet" type="text/css" href=".\css\index.css">
+    <title>Investor Information</title>
     <style>
         body {
-        background-color: #ffffff; /* White background */
-        color: #333333; /* Dark text color */
-        font-family: Arial, sans-serif;
+            font-family: Arial, sans-serif;
+            margin: 20px;
         }
 
         .blue-header {
@@ -28,38 +25,49 @@
             margin: 20px auto; /* Center the card on the page */
         }
 
-        form {
+        table {
+            width: 50%;
             margin-top: 20px;
+            border-collapse: collapse;
+            margin-bottom: 20px;
         }
-
-        input{
-            margin-bottom: 10px;
-
-        } 
-        
-        button {
-            margin-bottom: 10px;
-            background-color: #d1ce14;
-            color: black;
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color:  #084e7c;
+            color: white;
         }
     </style>
 </head>
-
 <body>
 
     <header class="blue-header">
-        <h1>Welcome to the Enviro365 Investments!</h1>
+        <h2>Investor Information</h2>
     </header>
 
     <div class="card">
-        <form th:action="@{/investors/name}" method="post">
-            <label for="investorName">If you have invested before, enter your name:</label>
-            <input type="text" id="investorName" name="investorName" placeholder="Your Name" required>
-
-            <button type="submit">Submit</button>
-        </form>
-
-        <p>If you are a new investor, <a th:href="@{/investors/new_investor}">click here</a> to create a new profile.</p>
+        <table>
+            <tr>
+                <th>Name</th>
+                <td th:text="${investor.name}"></td>
+            </tr>
+            <tr>
+                <th>Age</th>
+                <td th:text="${investor.age}"></td>
+            </tr>
+            <tr>
+                <th>Address</th>
+                <td th:text="${investor.address}"></td>
+            </tr>
+            <tr>
+                <th>Contact</th>
+                <td th:text="${investor.contact}"></td>
+            </tr>
+        </table>
     </div>
+
 </body>
 </html>
