@@ -97,11 +97,24 @@ public class InvestorController {
 
     // Endpoint to get an investor by ID
     @GetMapping("id/{investorId}")
-    public ResponseEntity<Investor> getInvestorById(@PathVariable Long investorId) throws Exception {
-        Investor investor = investorService.getInvestorById(investorId);
-        return ResponseEntity.ok(investor);
-    }
+    public ModelAndView getInvestorById(@PathVariable Long investorId) throws Exception {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("investor");
 
+        try {
+            Investor investor = investorService.getInvestorById(investorId);
+            modelAndView.addObject("investor", investor);
+        } catch (UnsupportedEncodingException e) {
+            modelAndView.setViewName("error");
+            modelAndView.addObject("errorMessage", "Error decoding investorName");
+        } catch (Exception e) {
+            modelAndView.setViewName("error");
+            modelAndView.addObject("errorMessage", "Investor not found");
+        }
+
+        return modelAndView;
+    }
+    
     // Endpoint to get products associated with an investor by ID
     @GetMapping("/{investorId}/products")
     public ResponseEntity<List<Product>> getInvestorProducts(@PathVariable Long investorId) throws Exception {

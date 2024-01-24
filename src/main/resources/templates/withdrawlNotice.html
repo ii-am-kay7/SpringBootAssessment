@@ -55,6 +55,10 @@
             background-color: #084e7c;
             color: white;
         }
+
+        #no_withdrawals {
+        margin-top: 30px;
+        }
     </style>
 </head>
 <body>
@@ -68,7 +72,11 @@
         <a href="product.html">View Products</a>
     </div>
 
-    <div class="card">
+    <p th:id="no_withdrawals" th:if="${#lists.isEmpty(withdrawalNoticeList)}">
+        You don't have any products yet!
+    </p>
+
+    <div class="card" id = "withdrawals" th:unless="${#lists.isEmpty(withdrawalNoticeList)}">
         <table>
             <thead>
                 <tr>
