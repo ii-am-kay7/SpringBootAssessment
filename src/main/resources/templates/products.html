@@ -32,6 +32,11 @@
             text-decoration: none;
         }
 
+        .new-product-link {
+        text-align: right; 
+        margin-top: 20px; 
+        }
+
         .card {
             border: 1px solid #075183; 
             border-radius: 8px; 
@@ -41,7 +46,7 @@
         }
 
         table {
-            width: 100%; /* Adjusted to 100% to match the provided style */
+            width: 100%; 
             margin-top: 20px;
             border-collapse: collapse;
             margin-bottom: 20px;
@@ -54,6 +59,10 @@
         th {
             background-color: #084e7c;
             color: white;
+        }
+
+        #no_products {
+        margin-top: 30px;
         }
     </style>
 </head>
@@ -68,7 +77,11 @@
         <a href="withdrawalNotice.html">View Withdrawal Notice</a>
     </div>
 
-    <div class="card">
+    <p th:id="no_products" th:if="${#lists.isEmpty(productList)}">
+        You don't have any products yet!
+    </p>
+
+    <div class="card" id = "products" th:unless="${#lists.isEmpty(productList)}" >
         <table>
             <thead>
                 <tr>
@@ -87,7 +100,7 @@
         </table>
     </div>
 
-    <div class="header-links">
+    <div class="new-product-link">
         <a th:href="@{/products/{investorId}/new_product(investorId=${investorId})}">Add New Product</a>
     </div>
 

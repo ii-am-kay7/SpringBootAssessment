@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.enviro.assessment.grad001.kamielahheuvel.Models.AppExceptions;
+import com.enviro.assessment.grad001.kamielahheuvel.Models.Investor;
 import com.enviro.assessment.grad001.kamielahheuvel.Models.Product;
+import com.enviro.assessment.grad001.kamielahheuvel.Services.InvestorService;
 import com.enviro.assessment.grad001.kamielahheuvel.Services.ProductService;
 
 @RestController
@@ -19,6 +21,8 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired InvestorService investorService;
 
     // Hello endpoint for testing
     @GetMapping("/hello")
@@ -83,17 +87,18 @@ public class ProductController {
             @PathVariable Long investorId,
             @RequestParam String type,
             @RequestParam String name,
-            @RequestParam BigDecimal currentBalance) {
+            @RequestParam BigDecimal currentBalance) throws Exception {
 
         try {
             // Create a new instance of Product using the provided request parameters
             Product newProduct = new Product(type, name, currentBalance);
 
+            // Set the investorId for the newly created product
+            Investor investor = investorService.getInvestorById(investorId);
+            newProduct.setInvestor(investor);
+
             // Call the service method to create the new product
             Product createdProduct = productService.createNewProduct(newProduct);
-
-            // Set the investorId for the newly created product
-            newProduct.setInvestorId(investorId);
 
             // Return the created product in the response
             return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);

@@ -75,6 +75,8 @@
             <label for="currentBalance">Current Balance:</label>
             <input type="text" id="currentBalance" name="currentBalance" required>
 
+            <input type="hidden" id="investorId" name="investorId" th:value="${investorId}">
+
             <button type="button" onclick="submitForm()">Submit</button>
         </form>
 
@@ -83,9 +85,8 @@
                 var type = document.getElementById('type').value;
                 var name = document.getElementById('name').value;
                 var currentBalance = document.getElementById('currentBalance').value;
-    
-                // You can perform additional validations here if needed
-    
+                var investorId= document.getElementById('investorId').value;
+
                 // Using AJAX to submit the form data as URL-encoded parameters
                 var xhr = new XMLHttpRequest();
                 xhr.open("POST", "/products/" + investorId + "/new_product.action", true);
@@ -99,8 +100,7 @@
                     if (xhr.readyState === 4) {
                         if (xhr.status === 201) {
                             // Successful response, redirect to product.html or handle as needed
-                            alert("Product created successfully!");
-                            window.location.href = "/products/" + investorId + "/list"
+                            window.location.href = "/products/" + investorId + "/list";
                         } else {
                             // Handle errors here
                             console.error("Error creating product:", JSON.parse(xhr.responseText));

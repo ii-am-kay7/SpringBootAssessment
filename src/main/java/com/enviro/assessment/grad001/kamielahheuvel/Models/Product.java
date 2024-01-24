@@ -54,10 +54,6 @@ public class Product {
         return currentBalance;
     }
 
-    public Long getInvestorId(){
-        return investor.getId();
-    }
-
     public void setId(Long Id){
         this.id = Id;
     }
@@ -76,10 +72,6 @@ public class Product {
 
     public void setInvestor(Investor investor){
         this.investor = investor;
-    }
-
-    public void setInvestorId(Long investorId) {
-        this.investor.setId(investorId);
     }
 
     // Returns a string presentation of the product
